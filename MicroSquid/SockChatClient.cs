@@ -85,16 +85,17 @@ namespace MicroSquid {
             return true;
         }
 
-        public void Disconnect() {
-            WebSocket.Disconnect();
+        public void Send(string data) {
+            Debug.WriteLine(data);
+            WebSocket.Send(data);
         }
 
         public void Send(object data) {
-            WebSocket.Send(data.ToString());
+            Send(data.ToString());
         }
 
         public void Send(params object[] data) {
-            WebSocket.Send(string.Join('\t', data));
+            Send(string.Join('\t', data));
         }
 
         public void SendPing() {
@@ -143,30 +144,32 @@ namespace MicroSquid {
             Debug.WriteLine(message);
 
             IEnumerable<string> parts = message.Split('\t');
+            string packetId = parts.ElementAtOrDefault(0),
+                subPacketId = parts.ElementAtOrDefault(1);
 
-            Type type = parts.ElementAt(0) switch {
+            Type type = packetId switch {
                 @"0" => typeof(PongPacket),
-                @"1" => parts.ElementAt(1) switch {
+                @"1" => subPacketId switch {
                     @"y" => typeof(AuthSuccessPacket),
                     @"n" => typeof(AuthFailPacket),
                     _ => typeof(UserConnectPacket),
                 },
                 @"2" => typeof(MessageAddPacket),
                 @"3" => typeof(UserDisconnectPacket),
-                @"4" => parts.ElementAt(1) switch {
+                @"4" => subPacketId switch {
                     @"0" => typeof(ChannelCreatePacket),
                     @"1" => typeof(ChannelUpdatePacket),
                     @"2" => typeof(ChannelDeletePacket),
                     _ => null,
                 },
-                @"5" => parts.ElementAt(1) switch {
+                @"5" => subPacketId switch {
                     @"0" => typeof(UserJoinPacket),
                     @"1" => typeof(UserLeavePacket),
                     @"2" => typeof(UserForceJoinPacket),
                     _ => null,
                 },
                 @"6" => typeof(MessageDeletePacket),
-                @"7" => parts.ElementAt(1) switch {
+                @"7" => subPacketId switch {
                     @"0" => typeof(ContextUsersPacket),
                     @"1" => typeof(ContextMessageAddPacket),
                     @"2" => typeof(ContextChannelsPacket),
@@ -180,10 +183,8 @@ namespace MicroSquid {
                 _ => null,
             };
 
-            if(type == null) {
-                Debug.Fail($@"Unknown packet type {parts.ElementAtOrDefault(0)} ({parts.ElementAtOrDefault(1)})");
-                return;
-            }
+            if(type == null)
+                throw new Exception($@"Unknown packet type {packetId} ({subPacketId})");
 
             Packet packet = (Packet)Activator.CreateInstance(type, parts);
 
@@ -340,9 +341,11 @@ namespace MicroSquid {
                 case ContextMessageAddPacket cmap:
                     lock(MessageSync) {
                         lock(UserSync) { // needs channel support
-                            ChatMessage cmapm = cmap.CreateMessage(Users);
-                            Messages.Add(cmapm);
-                            OnMessageAdd?.Invoke(cmapm);
+                            lock(ChannelSync) {
+                                ChatMessage cmapm = cmap.CreateMessage(Channels, Users);
+                                Messages.Add(cmapm);
+                                OnMessageAdd?.Invoke(cmapm);
+                            }
                         }
                     }
                     break;

@@ -12,5 +12,9 @@ namespace MicroSquid.Packets {
             if(Reason == @"joinfail")
                 Until = DateTimeOffset.FromUnixTimeSeconds(int.Parse(data.ElementAt(3)));
         }
+
+        public override string ToString() {
+            return $@"[{DateTimeOffset.Now:HH:mm:ss}] Authentication failed: {Reason} (Until: {Until}).";
+        }
     }
 }

@@ -30,5 +30,9 @@ namespace MicroSquid.Packets {
                 users.First(u => u.UserId == UserId)
             );
         }
+
+        public override string ToString() {
+            return $@"[{DateTime:HH:mm:ss}] #{MessageId} <{UserId}> {Text}";
+        }
     }
 }

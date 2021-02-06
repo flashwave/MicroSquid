@@ -23,66 +23,122 @@ namespace MicroSquid {
         }
 
         private void ShowAuthDiag(string title) {
+            SendButton.Enabled = MessageInput.Enabled = false;
+            ChannelList.Items.Clear();
+            UserList.Items.Clear();
+            Update();
+
             string serverUrl = string.Empty, authToken = string.Empty;
             using(AuthWindow aw = new AuthWindow { Text = title }) {
                 aw.ShowDialog();
+                if(aw.DialogResult != DialogResult.OK) {
+                    Application.Exit();
+                    return;
+                }
+
                 serverUrl = aw.ServerUrl;
                 authToken = aw.AuthToken;
             }
 
-            if(ChatClient?.Server != serverUrl) {
-                ChatClient?.Dispose();
-                ChatClient = new SockChatClient(serverUrl);
-                ChatClient.OnOpen += ChatClient_OnOpen;
-                ChatClient.OnClose += ChatClient_OnClose;
-                ChatClient.OnReceive += ChatClient_OnReceive;
-            } else
-                ChatClient.Disconnect();
-
+            ChatClient?.Dispose();
+            ChatClient = new SockChatClient(serverUrl);
+            ChatClient.OnOpen += ChatClient_OnOpen;
+            ChatClient.OnClose += ChatClient_OnClose;
+            ChatClient.OnReceive += ChatClient_OnReceive;
+            ChatClient.OnUserAdd += ChatClient_OnUserAdd; // This should be replaced by user join probably
+            ChatClient.OnUserRemove += ChatClient_OnUserRemove;
+            ChatClient.OnChannelAdd += ChatClient_OnChannelAdd;
+            ChatClient.OnChannelRemove += ChatClient_OnChannelRemove;
+            ChatClient.OnUserTyping += ChatClient_OnUserTyping;
+            ChatClient.OnUsersClear += ChatClient_OnUsersClear;
+            ChatClient.OnChannelsClear += ChatClient_OnChannelsClear;
+            ChatClient.OnAuthSuccess += ChatClient_OnAuthSuccess;
             ChatClient.Connect(authToken);
         }
 
+        private void ChatClient_OnUsersClear(ChatChannel obj) {
+            DoInvoke(() => UserList.Items.Clear());
+        }
+
+        private void ChatClient_OnChannelsClear() {
+            DoInvoke(() => ChannelList.Items.Clear());
+        }
+
+        private void ChatClient_OnUserTyping(ChatChannel arg1, ChatUser arg2, DateTimeOffset arg3) {
+            DoInvoke(() => StatusLabel.Text = $@"{arg2.UserName} is typing...");
+        }
+
+        private void ChatClient_OnAuthSuccess(ChatUser obj) {
+            DoInvoke(() => { SendButton.Enabled = MessageInput.Enabled = true; });
+        }
+
+        private void ChatClient_OnChannelAdd(ChatChannel obj) {
+            DoInvoke(() => ChannelList.Items.Add(obj));
+        }
+
+        private void ChatClient_OnChannelRemove(ChatChannel obj) {
+            DoInvoke(() => ChannelList.Items.Remove(obj));
+        }
+
+        private void ChatClient_OnUserAdd(DateTimeOffset arg1, ChatUser arg2) {
+            if(arg2.IsVisible)
+                DoInvoke(() => UserList.Items.Add(arg2));
+        }
+
+        private void ChatClient_OnUserRemove(DateTimeOffset arg1, ChatUser arg2) {
+            if(arg2.IsVisible)
+                DoInvoke(() => UserList.Items.Remove(arg2));
+        }
+
         private void ChatClient_OnOpen() {
-            Debug.WriteLine(@"Connection opened.");
+            DoInvoke(() => WriteLog(@"****** CONNECTED ******"));
         }
 
         private void ChatClient_OnClose() {
-            ShowAuthDiag(@"Connection lost.");
+            DoInvoke(() => {
+                WriteLog(@"****** DISCONNECTED ******");
+                ShowAuthDiag(@"Connection lost.");
+            });
         }
 
         private void ChatClient_OnReceive(Packet obj) {
-            WriteLog(obj);
+            DoInvoke(() => WriteLog(obj));
         }
 
         public void WriteLog(object obj)
             => WriteLog(obj.ToString());
 
-        private Action<ChatWindow, string> WriteLogBody { get; } = new Action<ChatWindow, string>((self, str) => {
-            lock(self.LogSync) {
-                self.MessageHistory.Text += str + Environment.NewLine;
-            }
-        });
-        public void WriteLog(string str) {
+        public void DoInvoke(Action action) {
             if(InvokeRequired)
-                Invoke(WriteLogBody, this, str);
+                Invoke(action);
             else
-                WriteLogBody(this, str);
+                action.Invoke();
+        }
+
+        public void WriteLog(string str) {
+            lock(LogSync) {
+                MessageHistory.Text += str + Environment.NewLine;
+                MessageHistory.SelectionStart = MessageHistory.TextLength;
+                MessageHistory.ScrollToCaret();
+            }
         }
 
         private void button1_Click(object sender, EventArgs e) {
-            ChatClient.Disconnect();
+            ChatClient.Dispose();
         }
 
         private void SendButton_Click(object sender, EventArgs e) {
             if(MessageInput.Text.Length < 1)
                 return;
-            ChatClient.SendMessage(string.Empty, MessageInput.Text);
+            ChatClient.SendMessage(ChatClient.DefaultChannel, MessageInput.Text);
             MessageInput.Text = string.Empty;
         }
 
         private void MessageInput_KeyDown(object sender, KeyEventArgs e) {
-            if(e.KeyCode == Keys.Enter && !e.Shift)
+            if(e.KeyCode == Keys.Enter && !e.Shift) {
+                e.Handled = e.SuppressKeyPress = true;
                 SendButton.PerformClick();
+            }
         }
     }
 }

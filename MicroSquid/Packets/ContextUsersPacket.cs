@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace MicroSquid.Packets {
@@ -39,6 +40,10 @@ namespace MicroSquid.Packets {
 
         public IEnumerable<ChatUser> CreateUsers() {
             return Users.Select(u => u.CreateUser());
+        }
+
+        public override string ToString() {
+            return $@"[{DateTimeOffset.Now:HH:mm:ss}] Received {Count} user(s).";
         }
     }
 }

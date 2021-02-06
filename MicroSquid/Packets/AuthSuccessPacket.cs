@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace MicroSquid.Packets {
@@ -29,6 +30,10 @@ namespace MicroSquid.Packets {
 
         public ChatUser CreateUser() {
             return new ChatUser(UserId, UserName, UserColour, Perms, isPrimary: true);
+        }
+
+        public override string ToString() {
+            return $@"[{DateTimeOffset.Now:HH:mm:ss}] Successfully authenticated as {UserId}/{UserName} with colour {UserColour} with Extensions v{Extensions} and Session ID {Session} the Default Channel is {Channel} and the maximum message length is {MaxLength} characters.";
         }
     }
 }

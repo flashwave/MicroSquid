@@ -11,5 +11,9 @@ namespace MicroSquid {
             HasPassword = hasPassword;
             IsTemporary = isTemporary;
         }
+
+        public override string ToString() {
+            return Name;
+        }
     }
 }

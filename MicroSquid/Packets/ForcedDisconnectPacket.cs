@@ -12,5 +12,9 @@ namespace MicroSquid.Packets {
             if(HasExpiry)
                 Expiry = DateTimeOffset.FromUnixTimeSeconds(int.Parse(data.ElementAt(2)));
         }
+
+        public override string ToString() {
+            return $@"[{DateTimeOffset.Now:HH:mm:ss}] You have been banned until {Expiry}.";
+        }
     }
 }

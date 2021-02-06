@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace MicroSquid.Packets {
@@ -20,6 +21,10 @@ namespace MicroSquid.Packets {
 
         public ChatUser CreateUser() {
             return new ChatUser(UserId, UserName, UserColour, isFake: true);
+        }
+
+        public override string ToString() {
+            return $@"[{DateTimeOffset.Now:HH:mm:ss}] {UserId}/{UserName} with colour {UserName} joined this channel (which channel????).";
         }
     }
 }

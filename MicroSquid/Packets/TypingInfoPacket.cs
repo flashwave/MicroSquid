@@ -13,5 +13,9 @@ namespace MicroSquid.Packets {
             UserId = long.Parse(data.ElementAt(2));
             DateTime = DateTimeOffset.FromUnixTimeSeconds(int.Parse(data.ElementAt(3)));
         }
+
+        public override string ToString() {
+            return $@"[{DateTime:HH:mm:ss}] {UserId} is typing in {Channel}...";
+        }
     }
 }

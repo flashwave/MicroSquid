@@ -13,5 +13,9 @@ namespace MicroSquid.Packets {
             SupportsTypingEvent = Capabilities.Contains(@"TYPING");
             SupportsMultiChannel = Capabilities.Contains(@"MCHAN");
         }
+
+        public override string ToString() {
+            return $@"[{DateTimeOffset.Now:HH:mm:ss}] Server accepted the following capabilities: {string.Join(@", ", Capabilities)}.";
+        }
     }
 }

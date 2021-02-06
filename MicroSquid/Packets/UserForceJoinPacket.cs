@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace MicroSquid.Packets {
@@ -7,6 +8,10 @@ namespace MicroSquid.Packets {
 
         public UserForceJoinPacket(IEnumerable<string> data) : base(data) {
             Channel = data.ElementAt(2);
+        }
+
+        public override string ToString() {
+            return $@"[{DateTimeOffset.Now:HH:mm:ss}] You were forced to join {Channel}.";
         }
     }
 }

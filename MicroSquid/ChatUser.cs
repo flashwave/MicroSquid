@@ -24,5 +24,9 @@ namespace MicroSquid {
             IsVisible = isVisible;
             IsPrimary = isPrimary;
         }
+
+        public override string ToString() {
+            return $@"{UserId}/{UserName}";
+        }
     }
 }

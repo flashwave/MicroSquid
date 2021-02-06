@@ -13,7 +13,6 @@ namespace MicroSquid.Packets {
         public long MessageId { get; }
         public bool Notify { get; }
         public bool IsWelcome { get; }
-
         public IEnumerable<bool> Flags { get; }
 
         public ContextMessageAddPacket(IEnumerable<string> data) : base(data) {
@@ -30,17 +29,23 @@ namespace MicroSquid.Packets {
             Flags = data.ElementAt(10).ToCharArray().Select(c => c != '0');
         }
 
-        public ChatMessage CreateMessage(IEnumerable<ChatUser> users) {
+        public ChatMessage CreateMessage(IEnumerable<ChatChannel> channels, IEnumerable<ChatUser> users) {
             return new ChatMessage(
                 MessageId,
                 DateTime,
+                channels?.FirstOrDefault(c => c.Name == string.Empty /* replace */),
                 Text,
+                Flags,
                 users?.FirstOrDefault(u => u.UserId == UserId) ?? new ChatUser(UserId, UserName, UserColour, Perms, true),
                 UserName,
                 UserColour,
                 Perms,
                 Notify
             );
+        }
+
+        public override string ToString() {
+            return $@"[{DateTime:HH:mm:ss}] #{MessageId} <{UserName}> {Text}";
         }
     }
 }

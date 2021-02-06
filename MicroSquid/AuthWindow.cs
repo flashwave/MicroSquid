@@ -23,10 +23,12 @@ namespace MicroSquid {
                 ServerURL.Text = config.ElementAtOrDefault(0) ?? string.Empty;
                 LoginToken.Text = config.ElementAtOrDefault(1)?.Replace('\t', '_') ?? string.Empty;
             }
+
+            DialogResult = DialogResult.Cancel;
         }
 
         private void button3_Click(object sender, EventArgs e) {
-            Application.Exit();
+            Close();
         }
 
         private void button2_Click(object sender, EventArgs e) {
@@ -48,6 +50,7 @@ namespace MicroSquid {
                 File.Delete(CONFIG);
             File.WriteAllLines(CONFIG, new[] { ServerUrl, AuthToken });
 
+            DialogResult = DialogResult.OK;
             Close();
         }
     }

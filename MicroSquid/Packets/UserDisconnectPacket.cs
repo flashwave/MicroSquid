@@ -17,5 +17,9 @@ namespace MicroSquid.Packets {
             DateTime = DateTimeOffset.FromUnixTimeSeconds(int.Parse(data.ElementAt(4)));
             SequenceId = long.Parse(data.ElementAt(5));
         }
+
+        public override string ToString() {
+            return $@"[{DateTime:HH:mm:ss}] {UserId}/{UserName} has disconnected ({Reason}).";
+        }
     }
 }

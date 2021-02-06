@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace MicroSquid.Packets {
@@ -9,6 +10,10 @@ namespace MicroSquid.Packets {
         public UserLeavePacket(IEnumerable<string> data) : base(data) {
             UserId = long.Parse(data.ElementAt(2));
             SequenceId = long.Parse(data.ElementAt(3));
+        }
+
+        public override string ToString() {
+            return $@"[{DateTimeOffset.Now:HH:mm:ss}] {UserId} left this channel (which channel??????).";
         }
     }
 }

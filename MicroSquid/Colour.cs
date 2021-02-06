@@ -34,6 +34,10 @@ namespace MicroSquid {
         public Color ToDrawingColor()
             => Color.FromArgb(Raw & 0xFFFFFF);
 
+        public override string ToString() {
+            return CSS;
+        }
+
         public static Colour Parse(string css) {
             // todo: move all creations to static readonly's
             switch(css.Trim().ToLowerInvariant()) {

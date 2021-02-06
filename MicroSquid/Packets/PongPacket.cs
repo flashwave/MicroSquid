@@ -10,5 +10,9 @@ namespace MicroSquid.Packets {
             string arg = data.ElementAt(1);
             DateTime = arg == @"pong" ? DateTimeOffset.Now : DateTimeOffset.FromUnixTimeSeconds(int.Parse(arg));
         }
+
+        public override string ToString() {
+            return $@"[{DateTime:HH:mm:ss}] Pong!";
+        }
     }
 }

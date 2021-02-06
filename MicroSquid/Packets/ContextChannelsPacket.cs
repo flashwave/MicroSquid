@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace MicroSquid.Packets {
@@ -34,6 +35,10 @@ namespace MicroSquid.Packets {
 
         public IEnumerable<ChatChannel> CreateChannels() {
             return Channels.Select(c => c.CreateChannel());
+        }
+
+        public override string ToString() {
+            return $@"[{DateTimeOffset.Now:HH:mm:ss}] Received {Count} channel(s).";
         }
     }
 }

@@ -24,5 +24,9 @@ namespace MicroSquid.Packets {
         public ChatUser CreateUser() {
             return new ChatUser(UserId, UserName, UserColour, Perms);
         }
+
+        public override string ToString() {
+            return $@"[{DateTime:HH:mm:ss}] {UserId}/{UserName} with colour {UserColour} has connected.";
+        }
     }
 }

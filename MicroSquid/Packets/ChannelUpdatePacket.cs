@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace MicroSquid.Packets {
@@ -23,6 +24,10 @@ namespace MicroSquid.Packets {
 
         public ChatChannel CreateChannel() {
             return new ChatChannel(NewName, HasPassword, IsTemporary);
+        }
+
+        public override string ToString() {
+            return $@"[{DateTimeOffset.Now:HH:mm:ss}] Channel {PreviousName} was renamed to {NewName}.";
         }
     }
 }
