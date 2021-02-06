@@ -56,7 +56,7 @@ namespace MicroSquid {
         }
 
         private void ChatClient_OnCapabilitiesUpdate(IEnumerable<string> caps) {
-            UpdateChannelDisplay(caps.Contains(SockChatClient.CAP_MULTI_CHANNEL));
+            DoInvoke(() => UpdateChannelDisplay(caps.Contains(SockChatClient.CAP_MULTI_CHANNEL)));
         }
 
         private void UpdateChannelDisplay(bool supportsMultiChannel) {
