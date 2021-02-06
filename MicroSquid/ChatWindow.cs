@@ -1,12 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Diagnostics;
-using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace MicroSquid {
@@ -26,11 +21,12 @@ namespace MicroSquid {
             SendButton.Enabled = MessageInput.Enabled = false;
             ChannelList.Items.Clear();
             UserList.Items.Clear();
+            UpdateChannelDisplay(false);
             Update();
 
             string serverUrl = string.Empty, authToken = string.Empty;
             using(AuthWindow aw = new AuthWindow { Text = title }) {
-                aw.ShowDialog();
+                aw.ShowDialog(this);
                 if(aw.DialogResult != DialogResult.OK) {
                     Application.Exit();
                     return;
@@ -53,7 +49,41 @@ namespace MicroSquid {
             ChatClient.OnUsersClear += ChatClient_OnUsersClear;
             ChatClient.OnChannelsClear += ChatClient_OnChannelsClear;
             ChatClient.OnAuthSuccess += ChatClient_OnAuthSuccess;
+            ChatClient.OnAuthFail += ChatClient_OnAuthFail;
+            ChatClient.OnForceDisconnect += ChatClient_OnForceDisconnect;
+            ChatClient.OnCapabilitiesUpdate += ChatClient_OnCapabilitiesUpdate;
             ChatClient.Connect(authToken);
+        }
+
+        private void ChatClient_OnCapabilitiesUpdate(IEnumerable<string> caps) {
+            UpdateChannelDisplay(caps.Contains(SockChatClient.CAP_MULTI_CHANNEL));
+        }
+
+        private void UpdateChannelDisplay(bool supportsMultiChannel) {
+            AllChannelsButton.Enabled = LeaveChannelButton.Enabled = supportsMultiChannel;
+
+            // Update on-screen list to only show channels we're currently in
+            // Leave button should issue the /leave command
+            // Channels button should open a new window with a list of all channels
+            // Meaning 7.2 should probably not be fired immediately.
+            // I should probably make it possible to specify capabilities in the auth packet, or maybe before it
+            // issue is that the auth packet has no format so there should be some kind of "unique enough" prefix to allow identification
+            // We already know the main channel from 2.y and v2/MCHAN supports being in 0 channels so we can still autojoin the lounge.
+        }
+
+        private void DisplayBan(bool hasExpiry, bool isPermanent, DateTimeOffset expiry) {
+            using BanNotice bn = new BanNotice(hasExpiry, isPermanent, expiry);
+            bn.ShowDialog(this);
+            ShowAuthDiag(@"You were banned.");
+        }
+
+        private void ChatClient_OnAuthFail(string arg1, bool arg2, bool arg3, DateTimeOffset arg4) {
+            if(arg2)
+                DoInvoke(() => DisplayBan(arg2, arg3, arg4));
+        }
+
+        private void ChatClient_OnForceDisconnect(bool arg1, bool arg2, DateTimeOffset arg3) {
+            DoInvoke(() => DisplayBan(arg1, arg2, arg3));
         }
 
         private void ChatClient_OnUsersClear(ChatChannel obj) {
@@ -97,7 +127,8 @@ namespace MicroSquid {
         private void ChatClient_OnClose() {
             DoInvoke(() => {
                 WriteLog(@"****** DISCONNECTED ******");
-                ShowAuthDiag(@"Connection lost.");
+                if(!ChatClient.WasBanned)
+                    ShowAuthDiag(@"Connection lost.");
             });
         }
 
@@ -116,6 +147,8 @@ namespace MicroSquid {
         }
 
         public void WriteLog(string str) {
+            if(IsDisposed)
+                return;
             lock(LogSync) {
                 MessageHistory.Text += str + Environment.NewLine;
                 MessageHistory.SelectionStart = MessageHistory.TextLength;
@@ -138,6 +171,48 @@ namespace MicroSquid {
             if(e.KeyCode == Keys.Enter && !e.Shift) {
                 e.Handled = e.SuppressKeyPress = true;
                 SendButton.PerformClick();
+            }
+        }
+
+        private void button2_Click(object sender, EventArgs e) {
+            MessageHistory.Clear();
+        }
+
+        private void ShowUserActions() {
+            if(UserList.SelectedItem is ChatUser cu)
+                Debug.WriteLine($@"Show user actions for {cu}");
+        }
+
+        private void UserList_DoubleClick(object sender, EventArgs e) {
+            ShowUserActions();
+        }
+
+        private void UserList_KeyDown(object sender, KeyEventArgs e) {
+            switch(e.KeyCode) {
+                case Keys.Enter:
+                    ShowUserActions();
+                    break;
+                case Keys.Delete:
+                    if(UserList.SelectedItem is ChatUser cu)
+                        ChatClient.SendKick(cu);
+                    break;
+            }
+        }
+
+        private void JoinChannel() {
+            if(ChannelList.SelectedItem is ChatChannel cc)
+                Debug.WriteLine($@"Join {cc}");
+        }
+
+        private void ChannelList_DoubleClick(object sender, EventArgs e) {
+            JoinChannel();
+        }
+
+        private void ChannelList_KeyDown(object sender, KeyEventArgs e) {
+            switch(e.KeyCode) {
+                case Keys.Enter:
+                    JoinChannel();
+                    break;
             }
         }
     }

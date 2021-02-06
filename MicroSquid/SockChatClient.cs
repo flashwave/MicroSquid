@@ -10,15 +10,22 @@ namespace MicroSquid {
         public PureWebSocket WebSocket { get; }
         public string Server { get; }
 
+        public const string CAP_MULTI_CHANNEL = @"MCHAN";
+        public const string CAP_TYPING_INFO = @"TYPING";
+        private static readonly string[] SupportedCapabilities = new[] { CAP_TYPING_INFO, CAP_MULTI_CHANNEL, };
+
         public event Action OnOpen;
         public event Action OnClose;
         public event Action<Packet> OnReceive;
 
+        public event Action<DateTimeOffset> OnPing;
+        public event Action<DateTimeOffset> OnPong;
+
         public event Action<ChatUser> OnAuthSuccess;
-        public event Action<string, DateTimeOffset> OnAuthFail;
+        public event Action<string, bool, bool, DateTimeOffset> OnAuthFail;
 
         public event Action<IEnumerable<string>> OnCapabilitiesUpdate;
-        public event Action<DateTimeOffset> OnForceDisconnect;
+        public event Action<bool, bool, DateTimeOffset> OnForceDisconnect;
         public event Action<ChatChannel, ChatUser, DateTimeOffset> OnUserTyping;
 
         public event Action<ChatMessage> OnMessageAdd;
@@ -57,7 +64,10 @@ namespace MicroSquid {
         public DateTimeOffset LastPing { get; private set; }
         public DateTimeOffset LastPong { get; private set; }
 
-        public DateTimeOffset BannedUntil { get; private set; }
+        public bool WasBanned { get; private set; }
+        public bool BanIsPermanent { get; private set; }
+        public bool BanHasExpiry { get; private set; }
+        public DateTimeOffset BanExpires { get; private set; }
 
         public List<ChatUser> Users { get; } = new List<ChatUser>();
         private object UserSync { get; } = new object();
@@ -103,6 +113,7 @@ namespace MicroSquid {
                 return;
             LastPing = DateTimeOffset.Now;
             Send(0, User.UserId, LastPing.ToUnixTimeSeconds());
+            OnPing?.Invoke(LastPing);
         }
 
         public void SendAuth(string authToken) {
@@ -117,9 +128,6 @@ namespace MicroSquid {
             Send(2, User.UserId, text.Replace("\t", @"    "), channel);
         }
 
-        // Should Caps and Typing also send user id?
-        // Could make for a fun operator feature...
-        
         public void SendCapabilities(params string[] caps) {
             if(!HasUser)
                 return;
@@ -129,7 +137,12 @@ namespace MicroSquid {
         public void SendTyping(string channel) {
             if(!HasUser)
                 return;
-            Send(4, channel);
+            Send(4, User.UserId, channel);
+        }
+
+        public void SendKick(ChatUser user, DateTimeOffset? expiry = null, bool banAddress = false) {
+            long expires = expiry == DateTimeOffset.MaxValue ? -1 : (expiry.HasValue ? expiry.Value.ToUnixTimeSeconds() : 0);
+            SendMessage(string.Empty, $@"/{(banAddress ? @"ban" : @"kick")} {user.UserName} {expires}");
         }
 
         private void WebSocket_OnOpened(object sender) {
@@ -191,6 +204,7 @@ namespace MicroSquid {
             switch(packet) {
                 case PongPacket pp:
                     LastPong = pp.DateTime;
+                    OnPong?.Invoke(LastPing);
                     break;
 
                 case AuthSuccessPacket asp:
@@ -205,14 +219,18 @@ namespace MicroSquid {
                     }
 
                     if(Version >= 2)
-                        SendCapabilities(@"TYPING", @"MCHAN");
+                        SendCapabilities(SupportedCapabilities);
 
                     OnAuthSuccess?.Invoke(User);
                     break;
 
                 case AuthFailPacket afp:
-                    BannedUntil = afp.Until;
-                    OnAuthFail?.Invoke(afp.Reason, afp.Until);
+                    if(afp.Reason == @"joinfail") {
+                        WasBanned = BanHasExpiry = true;
+                        BanIsPermanent = afp.IsPermanent;
+                        BanExpires = afp.Expiry;
+                    }
+                    OnAuthFail?.Invoke(afp.Reason, BanHasExpiry, BanIsPermanent, BanExpires);
                     break;
 
                 case UserConnectPacket ucp:
@@ -388,7 +406,11 @@ namespace MicroSquid {
                     break;
 
                 case ForcedDisconnectPacket fdp:
-                    OnForceDisconnect?.Invoke(fdp.Expiry);
+                    WasBanned = true;
+                    BanHasExpiry = fdp.HasExpiry;
+                    BanIsPermanent = fdp.IsPermanent;
+                    BanExpires = fdp.Expiry;
+                    OnForceDisconnect?.Invoke(fdp.HasExpiry, fdp.IsPermanent, fdp.Expiry);
                     break;
 
                 case UserUpdatePacket uup:

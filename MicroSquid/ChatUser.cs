@@ -26,7 +26,7 @@ namespace MicroSquid {
         }
 
         public override string ToString() {
-            return $@"{UserId}/{UserName}";
+            return UserName;
         }
     }
 }
