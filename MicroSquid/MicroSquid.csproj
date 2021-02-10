@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="PureWebSockets" Version="4.0.0" />
+    <ProjectReference Include="..\MicroSquidCommon\MicroSquidCommon.csproj" />
   </ItemGroup>
 
 </Project>
