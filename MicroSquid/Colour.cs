@@ -6,10 +6,148 @@ namespace MicroSquid {
     public readonly struct Colour {
         private const int INHERIT = 0x40000000;
 
-        public int Raw { get; }
-
         public static readonly Colour Black = new Colour(0x000000);
+        public static readonly Colour Silver = new Colour(0xC0C0C0);
+        public static readonly Colour Grey = new Colour(0x808080);
+        public static readonly Colour White = new Colour(0xFFFFFF);
+        public static readonly Colour Maroon = new Colour(0x800000);
+        public static readonly Colour Red = new Colour(0xFF0000);
+        public static readonly Colour Purple = new Colour(0x800080);
+        public static readonly Colour Magenta = new Colour(0xFF00FF);
+        public static readonly Colour Green = new Colour(0x008000);
+        public static readonly Colour Lime = new Colour(0x00FF00);
+        public static readonly Colour Olive = new Colour(0x808000);
+        public static readonly Colour Yellow = new Colour(0xFFFF00);
+        public static readonly Colour Navy = new Colour(0x000080);
+        public static readonly Colour Blue = new Colour(0x0000FF);
+        public static readonly Colour Teal = new Colour(0x008080);
+        public static readonly Colour Cyan = new Colour(0x00FFFF);
+        public static readonly Colour Orange = new Colour(0xFFA500);
+        public static readonly Colour AliceBlue = new Colour(0xF0F8FF);
+        public static readonly Colour AntiqueWhite = new Colour(0xFAEBD7);
+        public static readonly Colour Aquamarine = new Colour(0x7FFFD4);
+        public static readonly Colour Azure = new Colour(0xF0FFFF);
+        public static readonly Colour Beige = new Colour(0xF5F5DC);
+        public static readonly Colour Bisque = new Colour(0xFFE4C4);
+        public static readonly Colour BlanchedAlmond = new Colour(0xFFEBCD);
+        public static readonly Colour BlueViolet = new Colour(0x8A2BE2);
+        public static readonly Colour Brown = new Colour(0xA52A2A);
+        public static readonly Colour Burlywood = new Colour(0xDEB887);
+        public static readonly Colour CadetBlue = new Colour(0x5F9EA0);
+        public static readonly Colour Chartreuse = new Colour(0x7FFF00);
+        public static readonly Colour Chocolate = new Colour(0xD2691E);
+        public static readonly Colour Coral = new Colour(0xFF7F50);
+        public static readonly Colour CornflowerBlue = new Colour(0x6495ED);
+        public static readonly Colour CornSilk = new Colour(0xFFF8DC);
+        public static readonly Colour Crimson = new Colour(0xDC143C);
+        public static readonly Colour DarkBlue = new Colour(0x00008B);
+        public static readonly Colour DarkCyan = new Colour(0x008B8B);
+        public static readonly Colour DarkGoldenrod = new Colour(0xB8860B);
+        public static readonly Colour DarkGrey = new Colour(0xA9A9A9);
+        public static readonly Colour DarkGreen = new Colour(0x006400);
+        public static readonly Colour DarkKhaki = new Colour(0xBDB76B);
+        public static readonly Colour DarkMagenta = new Colour(0x8B008B);
+        public static readonly Colour DarkOliveGreen = new Colour(0x556B2F);
+        public static readonly Colour DarkOrange = new Colour(0xFF8C00);
+        public static readonly Colour DarkOrchid = new Colour(0x9932CC);
+        public static readonly Colour DarkRed = new Colour(0x8B0000);
+        public static readonly Colour DarkSalmon = new Colour(0xE9967A);
+        public static readonly Colour DarkSeaGreen = new Colour(0x8FBC8F);
+        public static readonly Colour DarkSlateBlue = new Colour(0x483D8B);
+        public static readonly Colour DarkSlateGrey = new Colour(0x2F4F4F);
+        public static readonly Colour DarkTurquoise = new Colour(0x00CED1);
+        public static readonly Colour DarkViolet = new Colour(0x9400D3);
+        public static readonly Colour DeepPink = new Colour(0xFF1493);
+        public static readonly Colour DeepSkyBlue = new Colour(0x00BFFF);
+        public static readonly Colour DimGrey = new Colour(0x696969);
+        public static readonly Colour DodgerBlue = new Colour(0x1E90FF);
+        public static readonly Colour Firebrick = new Colour(0xB22222);
+        public static readonly Colour FloralWhite = new Colour(0xFFFAF0);
+        public static readonly Colour ForestGreen = new Colour(0x228B22);
+        public static readonly Colour Gainsboro = new Colour(0xDCDCDC);
+        public static readonly Colour GhostWhite = new Colour(0xF8F8FF);
+        public static readonly Colour Gold = new Colour(0xFFD700);
+        public static readonly Colour Goldenrod = new Colour(0xDAA520);
+        public static readonly Colour GreenYellow = new Colour(0xADFF2F);
+        public static readonly Colour Honeydew = new Colour(0xF0FFF0);
+        public static readonly Colour HotPink = new Colour(0xFF69B4);
+        public static readonly Colour IndianRed = new Colour(0xCD5C5C);
+        public static readonly Colour Indigo = new Colour(0x4B0082);
+        public static readonly Colour Ivory = new Colour(0xFFFFF0);
+        public static readonly Colour Khaki = new Colour(0xF0E68C);
+        public static readonly Colour Lavender = new Colour(0xE6E6FA);
+        public static readonly Colour LavenderBlush = new Colour(0xFFF0F5);
+        public static readonly Colour LawnGreen = new Colour(0x7CFC00);
+        public static readonly Colour LemonChiffon = new Colour(0xFFFACD);
+        public static readonly Colour LightBlue = new Colour(0xADD8E6);
+        public static readonly Colour LightCoral = new Colour(0xF08080);
+        public static readonly Colour LightCyan = new Colour(0xE0FFFF);
+        public static readonly Colour LightGoldenrodYellow = new Colour(0xFAFAD2);
+        public static readonly Colour LightGrey = new Colour(0xD3D3D3);
+        public static readonly Colour LightGreen = new Colour(0x90EE90);
+        public static readonly Colour LightPink = new Colour(0xFFB6C1);
+        public static readonly Colour LightSalmon = new Colour(0xFFA07A);
+        public static readonly Colour LightSeaGreen = new Colour(0x20B2AA);
+        public static readonly Colour LightSkyBlue = new Colour(0x87CEFA);
+        public static readonly Colour LightSlateGrey = new Colour(0x778899);
+        public static readonly Colour LightSteelBlue = new Colour(0xB0C4DE);
+        public static readonly Colour LightYellow = new Colour(0xFFFFE0);
+        public static readonly Colour LimeGreen = new Colour(0x32CD32);
+        public static readonly Colour Linen = new Colour(0xFAF0E6);
+        public static readonly Colour MediumAquamarine = new Colour(0x66CDAA);
+        public static readonly Colour MediumBlue = new Colour(0x0000CD);
+        public static readonly Colour MediumOrchid = new Colour(0xBA55D3);
+        public static readonly Colour MediumPurple = new Colour(0x9370DB);
+        public static readonly Colour MediumSeaGreen = new Colour(0x3CB371);
+        public static readonly Colour MediumSlateBlue = new Colour(0x7B68EE);
+        public static readonly Colour MediumSpringGreen = new Colour(0x00FA9A);
+        public static readonly Colour MediumTurquoise = new Colour(0x48D1CC);
+        public static readonly Colour MediumVioletRed = new Colour(0xC71585);
+        public static readonly Colour MidnightBlue = new Colour(0x191970);
+        public static readonly Colour MintCream = new Colour(0xF5FFFA);
+        public static readonly Colour MistyRose = new Colour(0xFFE4E1);
+        public static readonly Colour Moccasin = new Colour(0xFFE4B5);
+        public static readonly Colour NavajoWhite = new Colour(0xFFDEAD);
+        public static readonly Colour OldLace = new Colour(0xFDF5E6);
+        public static readonly Colour OliveDrab = new Colour(0x6B8E23);
+        public static readonly Colour OrangeRed = new Colour(0xFF4500);
+        public static readonly Colour Orchid = new Colour(0xDA70D6);
+        public static readonly Colour PaleGoldenrod = new Colour(0xEEE8AA);
+        public static readonly Colour PaleGreen = new Colour(0x98FB98);
+        public static readonly Colour PaleTurquoise = new Colour(0xAFEEEE);
+        public static readonly Colour PaleVioletRed = new Colour(0xDB7093);
+        public static readonly Colour PapayaWhip = new Colour(0xFFEFD5);
+        public static readonly Colour PeachPuff = new Colour(0xFFDAB9);
+        public static readonly Colour Peru = new Colour(0xCD853F);
+        public static readonly Colour Pink = new Colour(0xFFC0CD);
+        public static readonly Colour Plum = new Colour(0xDDA0DD);
+        public static readonly Colour PowderBlue = new Colour(0xB0E0E6);
+        public static readonly Colour RosyBrown = new Colour(0xBC8F8F);
+        public static readonly Colour RoyalBlue = new Colour(0x4169E1);
+        public static readonly Colour SaddleBrown = new Colour(0x8B4513);
+        public static readonly Colour Salmon = new Colour(0xFA8072);
+        public static readonly Colour SandyBrown = new Colour(0xF4A460);
+        public static readonly Colour SeaGreen = new Colour(0x2E8B57);
+        public static readonly Colour Seashell = new Colour(0xFFF5EE);
+        public static readonly Colour Sienna = new Colour(0xA0522D);
+        public static readonly Colour SkyBlue = new Colour(0x87CEEB);
+        public static readonly Colour SlateBlue = new Colour(0x6A5ACD);
+        public static readonly Colour SlateGrey = new Colour(0x708090);
+        public static readonly Colour Snow = new Colour(0xFFFAFA);
+        public static readonly Colour SpringGreen = new Colour(0x00FF7F);
+        public static readonly Colour SteelBlue = new Colour(0x4682B4);
+        public static readonly Colour Tan = new Colour(0xD2B48C);
+        public static readonly Colour Thistle = new Colour(0xD8BFD8);
+        public static readonly Colour Tomato = new Colour(0xFF6347);
+        public static readonly Colour Turquoise = new Colour(0x40E0D0);
+        public static readonly Colour Violet = new Colour(0xEE82EE);
+        public static readonly Colour Wheat = new Colour(0xF5DEB3);
+        public static readonly Colour WhiteSmoke = new Colour(0xF5F5F5);
+        public static readonly Colour YellowGreen = new Colour(0x9ACD32);
+        public static readonly Colour RebeccaPurple = new Colour(0x663399);
         public static readonly Colour Inherit = new Colour(INHERIT);
+
+        public int Raw { get; }
 
         public Colour(int argb) {
             Raw = argb;
@@ -19,9 +157,9 @@ namespace MicroSquid {
         public static implicit operator Colour(string str) => Parse(str);
 
         public bool Inherits => (Raw & INHERIT) > 0;
-        public int Red => (Raw >> 16) & 0xFF;
-        public int Green => (Raw >> 8) & 0xFF;
-        public int Blue => Raw & 0xFF;
+        public int R => (Raw >> 16) & 0xFF;
+        public int G => (Raw >> 8) & 0xFF;
+        public int B => Raw & 0xFF;
 
         public string CSS {
             get {
@@ -50,296 +188,296 @@ namespace MicroSquid {
                 case @"black":
                     return Black;
                 case @"silver":
-                    return new Colour(0xC0C0C0);
+                    return Silver;
                 case @"gray":
                 case @"grey": // CSS Level 3
-                    return new Colour(0x808080);
+                    return Grey;
                 case @"white":
-                    return new Colour(0xFFFFFF);
+                    return White;
                 case @"maroon":
-                    return new Colour(0x800000);
+                    return Maroon;
                 case @"red":
-                    return new Colour(0xFF0000);
+                    return Red;
                 case @"purple":
-                    return new Colour(0x800080);
+                    return Purple;
                 case @"fuchsia":
                 case @"magenta": // CSS Level 3
-                    return new Colour(0xFF00FF);
+                    return Magenta;
                 case @"green":
-                    return new Colour(0x008000);
+                    return Green;
                 case @"lime":
-                    return new Colour(0x00FF00);
+                    return Lime;
                 case @"olive":
-                    return new Colour(0x808000);
+                    return Olive;
                 case @"yellow":
-                    return new Colour(0xFFFF00);
+                    return Yellow;
                 case @"navy":
-                    return new Colour(0x000080);
+                    return Navy;
                 case @"blue":
-                    return new Colour(0x0000FF);
+                    return Blue;
                 case @"teal":
-                    return new Colour(0x008080);
+                    return Teal;
                 case @"aqua":
                 case @"cyan": // CSS Level 3
-                    return new Colour(0x00FFFF);
+                    return Cyan;
 
                 // CSS Level 2
                 case @"orange":
-                    return new Colour(0xFFA500);
+                    return Orange;
 
                 // CSS Level 3
                 case @"aliceblue":
-                    return new Colour(0xF0F8FF);
+                    return AliceBlue;
                 case @"antiquewhite":
-                    return new Colour(0xFAEBD7);
+                    return AntiqueWhite;
                 case @"aquamarine":
-                    return new Colour(0x7FFFD4);
+                    return Aquamarine;
                 case @"azure":
-                    return new Colour(0xF0FFFF);
+                    return Azure;
                 case @"beige":
-                    return new Colour(0xF5F5DC);
+                    return Beige;
                 case @"bisque":
-                    return new Colour(0xFFE4C4);
+                    return Bisque;
                 case @"blanchedalmond":
-                    return new Colour(0xFFEBCD);
+                    return BlanchedAlmond;
                 case @"blueviolet":
-                    return new Colour(0x8A2BE2);
+                    return BlueViolet;
                 case @"brown":
-                    return new Colour(0xA52A2A);
+                    return Brown;
                 case @"burlywood":
-                    return new Colour(0xDEB887);
+                    return Burlywood;
                 case @"cadetblue":
-                    return new Colour(0x5F9EA0);
+                    return CadetBlue;
                 case @"chartreuse":
-                    return new Colour(0x7FFF00);
+                    return Chartreuse;
                 case @"chocolate":
-                    return new Colour(0xD2691E);
+                    return Chocolate;
                 case @"coral":
-                    return new Colour(0xFF7F50);
+                    return Coral;
                 case @"cornflowerblue":
-                    return new Colour(0x6495ED);
+                    return CornflowerBlue;
                 case @"cornsilk":
-                    return new Colour(0xFFF8DC);
+                    return CornSilk;
                 case @"crimson":
-                    return new Colour(0xDC143C);
+                    return Crimson;
                 case @"darkblue":
-                    return new Colour(0x00008B);
+                    return DarkBlue;
                 case @"darkcyan":
-                    return new Colour(0x008B8B);
+                    return DarkCyan;
                 case @"darkgoldenrod":
-                    return new Colour(0xB8860B);
+                    return DarkGoldenrod;
                 case @"darkgrey":
                 case @"darkgray":
-                    return new Colour(0xA9A9A9);
+                    return DarkGrey;
                 case @"darkgreen":
-                    return new Colour(0x006400);
+                    return DarkGreen;
                 case @"darkkhaki":
-                    return new Colour(0xBDB76B);
+                    return DarkKhaki;
                 case @"darkmagenta":
-                    return new Colour(0x8B008B);
+                    return DarkMagenta;
                 case @"darkolivegreen":
-                    return new Colour(0x556B2F);
+                    return DarkOliveGreen;
                 case @"darkorange":
-                    return new Colour(0xFF8C00);
+                    return DarkOrange;
                 case @"darkorchid":
-                    return new Colour(0x9932CC);
+                    return DarkOrchid;
                 case @"darkred":
-                    return new Colour(0x8B0000);
+                    return DarkRed;
                 case @"darksalmon":
-                    return new Colour(0xE9967A);
+                    return DarkSalmon;
                 case @"darkseagreen":
-                    return new Colour(0x8FBC8F);
+                    return DarkSeaGreen;
                 case @"darkslateblue":
-                    return new Colour(0x483D8B);
+                    return DarkSlateBlue;
                 case @"darkslategrey":
                 case @"darkslategray":
-                    return new Colour(0x2F4F4F);
+                    return DarkSlateGrey;
                 case @"darkturquoise":
-                    return new Colour(0x00CED1);
+                    return DarkTurquoise;
                 case @"darkviolet":
-                    return new Colour(0x9400D3);
+                    return DarkViolet;
                 case @"deeppink":
-                    return new Colour(0xFF1493);
+                    return DeepPink;
                 case @"deepskyblue":
-                    return new Colour(0x00BFFF);
+                    return DeepSkyBlue;
                 case @"dimgray":
                 case @"dimgrey":
-                    return new Colour(0x696969);
+                    return DimGrey;
                 case @"dodgerblue":
-                    return new Colour(0x1E90FF);
+                    return DodgerBlue;
                 case @"firebrick":
-                    return new Colour(0xB22222);
+                    return Firebrick;
                 case @"floralwhite":
-                    return new Colour(0xFFFAF0);
+                    return FloralWhite;
                 case @"forestgreen":
-                    return new Colour(0x228B22);
+                    return ForestGreen;
                 case @"gainsboro":
-                    return new Colour(0xDCDCDC);
+                    return Gainsboro;
                 case @"ghostwhite":
-                    return new Colour(0xF8F8FF);
+                    return GhostWhite;
                 case @"gold":
-                    return new Colour(0xFFD700);
+                    return Gold;
                 case @"goldenrod":
-                    return new Colour(0xDAA520);
+                    return Goldenrod;
                 case @"greenyellow":
-                    return new Colour(0xADFF2F);
+                    return GreenYellow;
                 case @"honeydew":
-                    return new Colour(0xF0FFF0);
+                    return Honeydew;
                 case @"hotpink":
-                    return new Colour(0xFF69B4);
+                    return HotPink;
                 case @"indianred":
-                    return new Colour(0xCD5C5C);
+                    return IndianRed;
                 case @"indigo":
-                    return new Colour(0x4B0082);
+                    return Indigo;
                 case @"ivory":
-                    return new Colour(0xFFFFF0);
+                    return Ivory;
                 case @"khaki":
-                    return new Colour(0xF0E68C);
+                    return Khaki;
                 case @"lavender":
-                    return new Colour(0xE6E6FA);
+                    return Lavender;
                 case @"lavenderblush":
-                    return new Colour(0xFFF0F5);
+                    return LavenderBlush;
                 case @"lawngreen":
-                    return new Colour(0x7CFC00);
+                    return LawnGreen;
                 case @"lemonchiffon":
-                    return new Colour(0xFFFACD);
+                    return LemonChiffon;
                 case @"lightblue":
-                    return new Colour(0xADD8E6);
+                    return LightBlue;
                 case @"lightcoral":
-                    return new Colour(0xF08080);
+                    return LightCoral;
                 case @"lightcyan":
-                    return new Colour(0xE0FFFF);
+                    return LightCyan;
                 case @"lightgoldenrodyellow":
-                    return new Colour(0xFAFAD2);
+                    return LightGoldenrodYellow;
                 case @"lightgray":
                 case @"lightgrey":
-                    return new Colour(0xD3D3D3);
+                    return LightGrey;
                 case @"lightgreen":
-                    return new Colour(0x90EE90);
+                    return LightGreen;
                 case @"lightpink":
-                    return new Colour(0xFFB6C1);
+                    return LightPink;
                 case @"lightsalmon":
-                    return new Colour(0xFFA07A);
+                    return LightSalmon;
                 case @"lightseagreen":
-                    return new Colour(0x20B2AA);
+                    return LightSeaGreen;
                 case @"lightskyblue":
-                    return new Colour(0x87CEFA);
+                    return LightSkyBlue;
                 case @"lightslategray":
                 case @"lightslategrey":
-                    return new Colour(0x778899);
+                    return LightSlateGrey;
                 case @"lightsteelblue":
-                    return new Colour(0xB0C4DE);
+                    return LightSteelBlue;
                 case @"lightyellow":
-                    return new Colour(0xFFFFE0);
+                    return LightYellow;
                 case @"limegreen":
-                    return new Colour(0x32CD32);
+                    return LimeGreen;
                 case @"linen":
-                    return new Colour(0xFAF0E6);
+                    return Linen;
                 case @"mediumaquamarine":
-                    return new Colour(0x66CDAA);
+                    return MediumAquamarine;
                 case @"mediumblue":
-                    return new Colour(0x0000CD);
+                    return MediumBlue;
                 case @"mediumorchid":
-                    return new Colour(0xBA55D3);
+                    return MediumOrchid;
                 case @"mediumpurple":
-                    return new Colour(0x9370DB);
+                    return MediumPurple;
                 case @"mediumseagreen":
-                    return new Colour(0x3CB371);
+                    return MediumSeaGreen;
                 case @"mediumslateblue":
-                    return new Colour(0x7B68EE);
+                    return MediumSlateBlue;
                 case @"mediumspringgreen":
-                    return new Colour(0x00FA9A);
+                    return MediumSpringGreen;
                 case @"mediumturquoise":
-                    return new Colour(0x48D1CC);
+                    return MediumTurquoise;
                 case @"mediumvioletred":
-                    return new Colour(0xC71585);
+                    return MediumVioletRed;
                 case @"midnightblue":
-                    return new Colour(0x191970);
+                    return MidnightBlue;
                 case @"mintcream":
-                    return new Colour(0xF5FFFA);
+                    return MintCream;
                 case @"mistyrose":
-                    return new Colour(0xFFE4E1);
+                    return MistyRose;
                 case @"moccasin":
-                    return new Colour(0xFFE4B5);
+                    return Moccasin;
                 case @"navajowhite":
-                    return new Colour(0xFFDEAD);
+                    return NavajoWhite;
                 case @"oldlace":
-                    return new Colour(0xFDF5E6);
+                    return OldLace;
                 case @"olivedrab":
-                    return new Colour(0x6B8E23);
+                    return OliveDrab;
                 case @"orangered":
-                    return new Colour(0xFF4500);
+                    return OrangeRed;
                 case @"orchid":
-                    return new Colour(0xDA70D6);
+                    return Orchid;
                 case @"palegoldenrod":
-                    return new Colour(0xEEE8AA);
+                    return PaleGoldenrod;
                 case @"palegreen":
-                    return new Colour(0x98FB98);
+                    return PaleGreen;
                 case @"paleturquoise":
-                    return new Colour(0xAFEEEE);
+                    return PaleTurquoise;
                 case @"palevioletred":
-                    return new Colour(0xDB7093);
+                    return PaleVioletRed;
                 case @"papayawhip":
-                    return new Colour(0xFFEFD5);
+                    return PapayaWhip;
                 case @"peachpuff":
-                    return new Colour(0xFFDAB9);
+                    return PeachPuff;
                 case @"peru":
-                    return new Colour(0xCD853F);
+                    return Peru;
                 case @"pink":
-                    return new Colour(0xFFC0CD);
+                    return Pink;
                 case @"plum":
-                    return new Colour(0xDDA0DD);
+                    return Plum;
                 case @"powderblue":
-                    return new Colour(0xB0E0E6);
+                    return PowderBlue;
                 case @"rosybrown":
-                    return new Colour(0xBC8F8F);
+                    return RosyBrown;
                 case @"royalblue":
-                    return new Colour(0x4169E1);
+                    return RoyalBlue;
                 case @"saddlebrown":
-                    return new Colour(0x8B4513);
+                    return SaddleBrown;
                 case @"salmon":
-                    return new Colour(0xFA8072);
+                    return Salmon;
                 case @"sandybrown":
-                    return new Colour(0xF4A460);
+                    return SandyBrown;
                 case @"seagreen":
-                    return new Colour(0x2E8B57);
+                    return SeaGreen;
                 case @"seashell":
-                    return new Colour(0xFFF5EE);
+                    return Seashell;
                 case @"sienna":
-                    return new Colour(0xA0522D);
+                    return Sienna;
                 case @"skyblue":
-                    return new Colour(0x87CEEB);
+                    return SkyBlue;
                 case @"slateblue":
-                    return new Colour(0x6A5ACD);
+                    return SlateBlue;
                 case @"slategray":
                 case @"slategrey":
-                    return new Colour(0x708090);
+                    return SlateGrey;
                 case @"snow":
-                    return new Colour(0xFFFAFA);
+                    return Snow;
                 case @"springgreen":
-                    return new Colour(0x00FF7F);
+                    return SpringGreen;
                 case @"steelblue":
-                    return new Colour(0x4682B4);
+                    return SteelBlue;
                 case @"tan":
-                    return new Colour(0xD2B48C);
+                    return Tan;
                 case @"thistle":
-                    return new Colour(0xD8BFD8);
+                    return Thistle;
                 case @"tomato":
-                    return new Colour(0xFF6347);
+                    return Tomato;
                 case @"turquoise":
-                    return new Colour(0x40E0D0);
+                    return Turquoise;
                 case @"violet":
-                    return new Colour(0xEE82EE);
+                    return Violet;
                 case @"wheat":
-                    return new Colour(0xF5DEB3);
+                    return Wheat;
                 case @"whitesmoke":
-                    return new Colour(0xF5F5F5);
+                    return WhiteSmoke;
                 case @"yellowgreen":
-                    return new Colour(0x9ACD32);
+                    return YellowGreen;
 
                 // CSS Level 4
                 case @"rebeccapurple":
-                    return new Colour(0x663399);
+                    return RebeccaPurple;
                     #endregion
             }
 
