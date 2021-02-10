@@ -78,7 +78,7 @@ namespace MicroSquid {
         public List<ChatMessage> Messages { get; } = new List<ChatMessage>();
         private object MessageSync { get; } = new object();
 
-        public SockChatClient(string server) {
+        public SockChatClient(string server, bool enablePing = true) {
             Server = server ?? throw new ArgumentNullException(nameof(server));
             WebSocket = new PureWebSocket(server, new PureWebSocketOptions());
             WebSocket.OnOpened += WebSocket_OnOpened;
