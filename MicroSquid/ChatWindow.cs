@@ -124,7 +124,7 @@ namespace MicroSquid {
             DoInvoke(() => WriteLog(@"****** CONNECTED ******"));
         }
 
-        private void ChatClient_OnClose() {
+        private void ChatClient_OnClose(bool wasClean) {
             DoInvoke(() => {
                 WriteLog(@"****** DISCONNECTED ******");
                 if(!ChatClient.WasBanned)

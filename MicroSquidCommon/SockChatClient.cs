@@ -15,7 +15,7 @@ namespace MicroSquid {
         private static readonly string[] SupportedCapabilities = new[] { CAP_TYPING_INFO, CAP_MULTI_CHANNEL, };
 
         public event Action OnOpen;
-        public event Action OnClose;
+        public event Action<bool> OnClose;
         public event Action<Packet> OnReceive;
 
         public event Action<DateTimeOffset> OnPing;
@@ -69,6 +69,8 @@ namespace MicroSquid {
         public bool BanHasExpiry { get; private set; }
         public DateTimeOffset BanExpires { get; private set; }
 
+        public ChatUser Bot { get; } = new ChatUser(-1, @"ChatBot", 0x9E8DA7, isVisible: false);
+
         public List<ChatUser> Users { get; } = new List<ChatUser>();
         private object UserSync { get; } = new object();
 
@@ -78,7 +80,11 @@ namespace MicroSquid {
         public List<ChatMessage> Messages { get; } = new List<ChatMessage>();
         private object MessageSync { get; } = new object();
 
+        public bool PingThreadEnabled { get; }
+        private PingThread PingThread { get; set; }
+
         public SockChatClient(string server, bool enablePing = true) {
+            PingThreadEnabled = enablePing;
             Server = server ?? throw new ArgumentNullException(nameof(server));
             WebSocket = new PureWebSocket(server, new PureWebSocketOptions());
             WebSocket.OnOpened += WebSocket_OnOpened;
@@ -122,9 +128,14 @@ namespace MicroSquid {
             Send(1, authToken);
         }
 
+        public void SendMessage(string text) {
+            SendMessage(LastChannel, text);
+        }
+
         public void SendMessage(string channel, string text) {
             if(!HasUser)
                 return;
+            LastChannel = channel ?? throw new ArgumentNullException(nameof(channel));
             Send(2, User.UserId, text.Replace("\t", @"    "), channel);
         }
 
@@ -134,15 +145,20 @@ namespace MicroSquid {
             Send(3, string.Join(' ', caps));
         }
 
+        public void SendTyping() {
+            SendTyping(LastChannel);
+        }
+
         public void SendTyping(string channel) {
             if(!HasUser)
                 return;
+            LastChannel = channel ?? throw new ArgumentNullException(nameof(channel));
             Send(4, User.UserId, channel);
         }
 
         public void SendKick(ChatUser user, DateTimeOffset? expiry = null, bool banAddress = false) {
             long expires = expiry == DateTimeOffset.MaxValue ? -1 : (expiry.HasValue ? expiry.Value.ToUnixTimeSeconds() : 0);
-            SendMessage(string.Empty, $@"/{(banAddress ? @"ban" : @"kick")} {user.UserName} {expires}");
+            SendMessage($@"/{(banAddress ? @"ban" : @"kick")} {user.UserName} {expires}");
         }
 
         private void WebSocket_OnOpened(object sender) {
@@ -150,7 +166,8 @@ namespace MicroSquid {
         }
 
         private void WebSocket_OnClosed(object sender, System.Net.WebSockets.WebSocketCloseStatus reason) {
-            OnClose?.Invoke();
+            PingThread?.Dispose();
+            OnClose?.Invoke(reason == System.Net.WebSockets.WebSocketCloseStatus.NormalClosure);
         }
 
         private void WebSocket_OnMessage(object sender, string message) {
@@ -209,17 +226,24 @@ namespace MicroSquid {
 
                 case AuthSuccessPacket asp:
                     Version = asp.Extensions;
-                    DefaultChannel = asp.Channel;
-                    MaxLength = asp.MaxLength;
+                    LastChannel = DefaultChannel = asp.Channel;
 
                     lock(UserSync) {
+                        Users.Add(Bot);
                         User = asp.CreateUser();
                         Users.Add(User);
                         OnUserAdd?.Invoke(DateTimeOffset.Now, User);
                     }
 
-                    if(Version >= 2)
+                    if(Version >= 2) {
+                        SessionId = asp.Session;
+                        MaxLength = asp.MaxLength;
                         SendCapabilities(SupportedCapabilities);
+                    }
+
+                    PingThread?.Dispose();
+                    if(PingThreadEnabled)
+                        PingThread = new PingThread(this);
 
                     OnAuthSuccess?.Invoke(User);
                     break;
@@ -242,7 +266,6 @@ namespace MicroSquid {
                     break;
 
                 case MessageAddPacket map:
-                    // wow this is ugly holy shit
                     lock(ChannelSync) {
                         lock(UserSync) {
                             lock(MessageSync) {
@@ -341,7 +364,7 @@ namespace MicroSquid {
                     lock(UserSync) {
                         lock(ChannelSync) {
                             ChatChannel cupc = Channels.FirstOrDefault(c => c.Name == DefaultChannel);
-                            if(cupc != null) {
+                            if(cupc != null || !SupportsMultiChannel) {
                                 IEnumerable<ChatUser> cupus = cup.CreateUsers();
                                 foreach(ChatUser cupu in cupus) {
                                     if(!Users.Any(u => u.UserId == cupu.UserId)) {
@@ -393,6 +416,7 @@ namespace MicroSquid {
 
                                 if(ccp.ClearUsers) {
                                     Users.Clear();
+                                    Users.Add(Bot);
                                     OnUsersClear?.Invoke(channel);
                                 }
 
@@ -462,6 +486,7 @@ namespace MicroSquid {
             if(IsDisposed)
                 return;
             IsDisposed = true;
+            PingThread?.Dispose();
             WebSocket.Dispose();
         }
     }

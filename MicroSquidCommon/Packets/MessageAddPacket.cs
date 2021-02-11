@@ -24,7 +24,7 @@ namespace MicroSquid.Packets {
             return new ChatMessage(
                 MessageId,
                 DateTime,
-                channels.First(c => c.Name == Channel),
+                channels.FirstOrDefault(c => c.Name == Channel),
                 Text,
                 Flags,
                 users.First(u => u.UserId == UserId)

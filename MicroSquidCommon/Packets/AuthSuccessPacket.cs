@@ -24,7 +24,14 @@ namespace MicroSquid.Packets {
 
             if(Extensions >= 2) {
                 Session = data.ElementAt(8);
-                MaxLength = int.Parse(data.ElementAt(9));
+
+                // Flashii runs an incomplete/experimental version of v2, just revert to v1 if MaxLength is missing.
+                if(int.TryParse(data.ElementAtOrDefault(9), out int maxLength))
+                    MaxLength = maxLength;
+                else {
+                    Extensions = 1;
+                    MaxLength = -1;
+                }
             }
         }
 
